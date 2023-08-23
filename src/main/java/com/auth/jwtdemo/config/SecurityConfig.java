@@ -1,5 +1,7 @@
 package com.auth.jwtdemo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,12 +11,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+//    @Value("${rsa.public-key}")
+    private final RsaKeyProperties rsaKeys;
+    @Autowired
+    public SecurityConfig(RsaKeyProperties rsaKeys) {
+        this.rsaKeys = rsaKeys;
+    }
+
 
     @Bean
     public InMemoryUserDetailsManager user() {
@@ -44,6 +55,11 @@ public class SecurityConfig {
                 .httpBasic()
                 .and()
                 .build();
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
     }
 }
 

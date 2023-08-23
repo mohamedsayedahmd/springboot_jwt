@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-@Configuration
 @ConfigurationProperties(prefix = "rsa")
 public class RsaKeyProperties {
     private RSAPublicKey publicKey;
     private RSAPrivateKey privateKey;
+
 
     public RSAPublicKey getPublicKey() {
         return publicKey;
